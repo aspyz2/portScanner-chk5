@@ -23,5 +23,8 @@ Módulo muito importante para implementar filas para serem consumidas por nossa 
 
 A lib mais importante de todo o projeto, sem ela não iriamos conseguir agilizar todo o processo de escaneamento.
 
+## Demo youtube
+https://youtu.be/dRBEl9ykL_Y
+
 
  
