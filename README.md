@@ -1,30 +1,43 @@
-# PortScan - CheckPoint 5 
+# PortScanner
 
-## Sobre
-**PortScan** foi o meu primeiro programa com intuito de scannear as portas e mapear elas.
+Multi-threaded TCP port scanner written in Python. It resolves a target host, scans the chosen port range with a configurable number of threads, and reports the open ports with their common service names.
 
-Foi ultilizado o Threading pois agizilia a quantidade de processos feitos simultaneamente, com a atualização do python 3.10 a ideia seria colocar switch no futuro, para agilizar ainda mais os processos.
+> Academic project from my Cybersecurity degree at FIAP (2021, *Development and Coding for Security*). It was my first security tool, kept here to show where I started.
 
-## Pré Requisitos 
-![Preview1](https://user-images.githubusercontent.com/82832401/138515298-4a391907-f5d3-4c36-9c18-39e6195fbcfb.png)
-Todas as bibliotecas necessarias para que o programa funciona com tranquilidade.
+## How it works
 
-### Sys 
-A lib que é usada para saida de programas em execução 
+1. Prompts for the target (hostname or IP), the port range and the number of threads
+2. Resolves the hostname with `socket.gethostbyname`
+3. Puts every port of the range in a `Queue`
+4. Starts N worker threads; each one takes ports from the queue and tries a TCP connect (`socket.connect`, 5 s timeout)
+5. Prints each open port as it is found, then a summary
 
-### Socket
- A lib que nós permite conectar a porta que queremos scannear 
+Threads make the scan much faster than a sequential loop, and the `Queue` makes sure no two threads scan the same port.
 
-### Queue
+| Range option | Ports |
+| --- | --- |
+| Well-known | 1 to 1024 |
+| Registered | 1025 to 49152 |
+| Dynamic | 49153 to 65535 |
+| All | 1 to 65535 |
 
-Módulo muito importante para implementar filas para serem consumidas por nossa threads, por conta da ultilização de thread para escanear portas, precisamos ter segurança ao acessar as portas lógicas
+## Usage
 
-### Thread
+```bash
+pip install inquirer
+python PortScanner.py
+```
 
-A lib mais importante de todo o projeto, sem ela não iriamos conseguir agilizar todo o processo de escaneamento.
+Demo video (Portuguese): https://youtu.be/dRBEl9ykL_Y
 
-## Demo youtube
-https://youtu.be/dRBEl9ykL_Y
+## Legal notice
 
+Only scan hosts you own or have explicit written permission to test. Unauthorized port scanning may be illegal and violate network policies.
 
- 
+## What I would improve today
+
+- Close sockets properly and handle unknown services without errors
+- Add command-line arguments (`argparse`) for non-interactive use
+- Add a UDP scan mode and banner grabbing
+- Use `asyncio` instead of threads for very large ranges
+- Export results to JSON or CSV
